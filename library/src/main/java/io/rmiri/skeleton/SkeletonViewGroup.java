@@ -3,6 +3,7 @@ package io.rmiri.skeleton;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -11,11 +12,11 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Build;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -103,9 +104,15 @@ public class SkeletonViewGroup extends SkeletonMaster {
     public void init(Context context, @Nullable AttributeSet attrs) {
         super.init(context, attrs);
 
+        if (attrs != null) {
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.Skeleton);
+            boolean bIsAutoPlay = ta.getBoolean(R.styleable.Skeleton_SK_animationAutoStart, true);
+            setAutoPlay(bIsAutoPlay);
+            ta.recycle();
+        }
+
         // Generate color 010 (color one transparent = 0.0 | color two transparent = 1.0 | color three transparent = 1.0 )
         gradientColors = ColorUtils.generateColorTransparent010(skeletonModel.getColorHighLight(), skeletonModel.getColorBackgroundViews());
-
     }
 
     @Override
@@ -201,7 +208,9 @@ public class SkeletonViewGroup extends SkeletonMaster {
                 skeletonModelsChildren.add(item);
 
             }
+            CLog.d("skeletonModel.isAutoStartAnimation() 1 -> " + skeletonModel.isAutoStartAnimation());
             if (skeletonModel.isAutoStartAnimation()) {
+
                 setupInitialAnimation();
             }
 
@@ -261,6 +270,8 @@ public class SkeletonViewGroup extends SkeletonMaster {
                     skeletonModelsChildren.add(item);
                 }
             }
+
+            CLog.d("skeletonModel.isAutoStartAnimation() 2 -> " + skeletonModel.isAutoStartAnimation());
             if (skeletonModel.isAutoStartAnimation()) {
                 setupInitialAnimation();
             }
@@ -596,6 +607,7 @@ public class SkeletonViewGroup extends SkeletonMaster {
 
         // Initial animation
         valueAnimator = ValueAnimator.ofFloat(valueAnimationMoveFractionStart, valueAnimationMoveFractionEnd);
+        valueAnimator.setStartDelay(0);
         valueAnimator.setDuration(skeletonModel.getAnimationDuration());
         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
         valueAnimator.setRepeatMode(ValueAnimator.RESTART);
@@ -692,7 +704,16 @@ public class SkeletonViewGroup extends SkeletonMaster {
     public void finishAnimation() {
         if (isAnimationPlay) {
             isLastLoopAnimation = true;
+            isAnimationPlay = false;
         }
+    }
+
+    public boolean isAnimating() {
+        return isAnimationPlay;
+    }
+
+    public void forceFinishAnimation() {
+        setupFinishingAnimation();
     }
 
     public void setSkeletonModels(ArrayList<SkeletonModel> skeletonModels) {
@@ -710,8 +731,14 @@ public class SkeletonViewGroup extends SkeletonMaster {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        finishAnimation();
+        if (valueAnimator != null) valueAnimator.pause();
         Log.e("+++++++++", "onDetachedFromWindow" + position);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (valueAnimator != null) valueAnimator.resume();
     }
 
     //==============================================================================================

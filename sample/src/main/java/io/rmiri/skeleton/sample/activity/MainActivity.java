@@ -2,8 +2,8 @@ package io.rmiri.skeleton.sample.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import android.view.View;
 
 import io.rmiri.skeleton.sample.R;

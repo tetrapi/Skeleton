@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-902319279/Skeleton.iml" filepath="$PROJECT_DIR$/.idea/modules/-902319279/Skeleton.iml" group="Skeleton" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library.iml" filepath="$PROJECT_DIR$/.idea/modules/library.iml" group="Skeleton/library" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1788114472/sample.iml" filepath="$PROJECT_DIR$/.idea/modules/1788114472/sample.iml" group="Skeleton/sample" />
+    </modules>
+  </component>
+</project>

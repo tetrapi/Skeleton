@@ -18,4 +18,10 @@ public class CLog {
             Log.i(Tag, message);
         }
     }
+
+    public static void d(String message) {
+        if (BuildConfig.DEBUG) {
+            Log.d(Tag, message);
+        }
+    }
 }
